@@ -1,0 +1,76 @@
+package main.entity;
+
+import main.GamePanel;
+import main.graphics.Arrow;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+public class Archer extends Entity{
+    GamePanel panel;
+    BufferedImage arrowIMG;
+    public Archer(float x, float y, int width, int height, int health, int range, int damage, long recoilTime, GamePanel panel) {
+        super(x, y, width, height, health, range, damage, recoilTime);
+        this.panel = panel;
+        try {
+            arrowIMG = ImageIO.read(new File("resources/arrow.png"));
+
+            walkFrames = new BufferedImage[8];
+            attackFrames = new BufferedImage[9];
+            deathFrames = new BufferedImage[4];
+            BufferedImage walkIMG = ImageIO.read(new File("resources/characters/soldierWalk.png"));
+            BufferedImage shootIMG = ImageIO.read(new File("resources/characters/archerAttack.png"));
+            BufferedImage deathIMG = ImageIO.read(new File("resources/characters/soldierDeath.png"));
+
+            for (int i = 0; i < 8; i++) {walkFrames[i] = walkIMG.getSubimage(100*i+40, 38, width, height);}
+            for (int i = 0; i < 9; i++) {attackFrames[i] = shootIMG.getSubimage(100*i+40, 38, width, height);}
+            for (int i = 0; i < 4; i++) {deathFrames[i] = deathIMG.getSubimage(100*i+40, 38, width, height);}
+
+            this.sprite = walkIMG.getSubimage(40, 38, width, height);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void update(double delta) {
+
+        if (isWalking) {
+            x++;
+            long now = System.currentTimeMillis();
+
+            if (now - lastFrameTime >= frameDuration) {
+                currentWalkFrame++;
+                lastFrameTime = now;
+
+                currentWalkFrame = (currentWalkFrame+1) % walkFrames.length;
+                sprite = walkFrames[currentWalkFrame];
+            }
+        }else if (isAttacking) {
+            long now = System.currentTimeMillis();
+            if (now - lastFrameTime >= frameDuration) {
+                currentAttackFrame++;
+                lastFrameTime = now;
+
+                currentAttackFrame = (currentAttackFrame + 1);
+
+                if (currentAttackFrame >= attackFrames.length) {
+                    currentAttackFrame = 0;
+
+                    // bow animation completed trigger arrow
+                    if(attacksTower)
+                        fireArrow(x,y, panel.getEnemyTower().getX()+50, panel.getEnemyTower().getY()+100, arrowIMG);
+                }
+                sprite = attackFrames[currentAttackFrame];
+            }
+        }
+    }
+
+    private void fireArrow(float startX, float startY, float endX, float endY, BufferedImage image) {
+
+        Arrow arrow = new Arrow(startX, startY, endX, endY, image);
+        panel.addProjectile(arrow);
+    }
+}
