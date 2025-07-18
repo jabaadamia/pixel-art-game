@@ -7,6 +7,7 @@ import main.characters.entities.EntityFactory;
 import main.enemies.EnemySpawner;
 import main.projectiles.Arrow;
 import main.state.GameState;
+import main.state.LevelDefinitions;
 import main.towers.Tower;
 import main.util.InputHandler;
 
@@ -121,6 +122,7 @@ public class GamePanel extends JPanel {
             if(entity.getHealth()<=0) {
                 playerEntities.remove(entity);
                 gameState.addToEnemyMoney((int) (entity.getPrice()*KILL_MONEY_PERCENT));
+                gameState.addToEnemyXP(entity.getPrice());
             }
             entity.update(delta);
         }
@@ -168,6 +170,7 @@ public class GamePanel extends JPanel {
             if(entity.getHealth()<=0) {
                 enemyEntities.remove(entity);
                 gameState.addToPlayerMoney((int) (entity.getPrice()*KILL_MONEY_PERCENT));
+                gameState.addToPlayerXP(entity.getPrice());
             }
             entity.update(delta);
         }
@@ -225,6 +228,8 @@ public class GamePanel extends JPanel {
         g2d.setColor(Color.WHITE);
         g2d.drawString("Money: " + gameState.getPlayerMoney(), cardStartX, cardStartY-10);
         g2d.drawString("soldiers: " + playerEntities.size()+"/10", cardStartX+100,cardStartY-10);
+        g2d.drawString("XP: " + gameState.getPlayerXP()+"/"+ LevelDefinitions.LVL1XP, cardStartX+200,cardStartY-10);
+        g2d.drawString("LVL: " + gameState.getPlayerLevel(), cardStartX+300,cardStartY-10);
 
         // tower health bars
         playerTower.drawHealthBar(g2d);
