@@ -1,31 +1,24 @@
-package main.entity;
-
-import main.GamePanel;
-import main.graphics.Arrow;
+package main.characters.entities;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Archer extends Entity{
-    GamePanel panel;
-    BufferedImage arrowIMG;
-    public Archer(float x, float y, int width, int height, int health, int range, int damage, long recoilTime, GamePanel panel) {
-        super(x, y, width, height, health, range, damage, recoilTime);
-        this.panel = panel;
-        try {
-            arrowIMG = ImageIO.read(new File("resources/arrow.png"));
+public class Soldier extends Entity {
 
+    public Soldier(float x, float y, int width, int height, int health, int range, int damage, long recoilTime) {
+        super(x, y, width, height, health, range, damage, recoilTime);
+        try {
             walkFrames = new BufferedImage[8];
-            attackFrames = new BufferedImage[9];
+            attackFrames = new BufferedImage[6];
             deathFrames = new BufferedImage[4];
             BufferedImage walkIMG = ImageIO.read(new File("resources/characters/soldierWalk.png"));
-            BufferedImage shootIMG = ImageIO.read(new File("resources/characters/archerAttack.png"));
+            BufferedImage attackIMG = ImageIO.read(new File("resources/characters/soldierAttack.png"));
             BufferedImage deathIMG = ImageIO.read(new File("resources/characters/soldierDeath.png"));
 
             for (int i = 0; i < 8; i++) {walkFrames[i] = walkIMG.getSubimage(100*i+40, 38, width, height);}
-            for (int i = 0; i < 9; i++) {attackFrames[i] = shootIMG.getSubimage(100*i+40, 38, width, height);}
+            for (int i = 0; i < 6; i++) {attackFrames[i] = attackIMG.getSubimage(100*i+40, 38, width, height);}
             for (int i = 0; i < 4; i++) {deathFrames[i] = deathIMG.getSubimage(100*i+40, 38, width, height);}
 
             this.sprite = walkIMG.getSubimage(40, 38, width, height);
@@ -54,23 +47,21 @@ public class Archer extends Entity{
                 currentAttackFrame++;
                 lastFrameTime = now;
 
-                currentAttackFrame = (currentAttackFrame + 1);
-
-                if (currentAttackFrame >= attackFrames.length) {
-                    currentAttackFrame = 0;
-
-                    // bow animation completed trigger arrow
-                    if(attacksTower)
-                        fireArrow(x,y, panel.getEnemyTower().getX()+50, panel.getEnemyTower().getY()+100, arrowIMG);
-                }
+                currentAttackFrame = (currentAttackFrame + 1) % attackFrames.length;
                 sprite = attackFrames[currentAttackFrame];
             }
         }
     }
 
-    private void fireArrow(float startX, float startY, float endX, float endY, BufferedImage image) {
+    public void attack() {
+        super.attack();
+    }
 
-        Arrow arrow = new Arrow(startX, startY, endX, endY, image);
-        panel.addProjectile(arrow);
+    public void walk() {
+        super.walk();
+    }
+
+    public void idle(){
+        super.idle();
     }
 }

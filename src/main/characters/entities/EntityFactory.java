@@ -1,6 +1,7 @@
-package main.entity;
+package main.characters.entities;
 
 import main.GamePanel;
+import main.characters.cards.CharacterCard;
 
 public class EntityFactory {
 

@@ -1,8 +1,12 @@
 package main;
 
-import main.entity.*;
-import main.graphics.Arrow;
+import main.characters.cards.CharacterCard;
+import main.characters.cards.CharacterDefinitions;
+import main.characters.entities.Entity;
+import main.characters.entities.EntityFactory;
+import main.projectiles.Arrow;
 import main.state.GameState;
+import main.towers.Tower;
 import main.util.InputHandler;
 
 import javax.swing.*;

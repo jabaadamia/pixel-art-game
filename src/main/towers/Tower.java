@@ -1,4 +1,4 @@
-package main.entity;
+package main.towers;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

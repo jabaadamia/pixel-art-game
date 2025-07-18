@@ -1,4 +1,4 @@
-package main.entity;
+package main.characters.cards;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

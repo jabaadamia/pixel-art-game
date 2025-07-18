@@ -1,4 +1,4 @@
-package main.graphics;
+package main.projectiles;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
