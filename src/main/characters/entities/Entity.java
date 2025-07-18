@@ -1,9 +1,11 @@
 package main.characters.entities;
 
+import main.characters.Targetable;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-public abstract class Entity {
+public abstract class Entity implements Targetable {
     protected float x, y;
     protected int width, height;
     protected boolean isEnemy;
@@ -30,7 +32,8 @@ public abstract class Entity {
     protected BufferedImage[] attackFrames;
     protected BufferedImage[] deathFrames;
 
-    public Entity(float x, float y, int width, int height, int health, int range, int damage, long recoilTime) {
+    public Entity(boolean isEnemy, float x, float y, int width, int height, int health, int range, int damage, long recoilTime) {
+        this.isEnemy = isEnemy;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -72,15 +75,32 @@ public abstract class Entity {
 
     public void render(Graphics2D g2d) {
         if (sprite != null) {
+            int spriteWidth = width * 2;
+            int healthBarWidth = width;
+            int healthBarX;
             // entity image
-            g2d.drawImage(sprite, (int)x, (int)y, width*2, height*2, null);
+            g2d.drawImage(sprite, (int)x, (int)y, spriteWidth, height*2, null);
             // health bar
-            g2d.setColor(Color.white);
-            g2d.drawRect((int)(x+width*0.25), (int)y, (int)(width*1.5), 2);
-            g2d.setColor(Color.green);
-            g2d.fillRect((int)(x+width*0.25), (int)y, (int)(width*1.5* (double) health / maxHealth), 2);
-            g2d.setColor(Color.red);
-            g2d.fillRect((int)(x+width*0.25+width*1.5* (double) health / maxHealth), (int)y, (int)(width*1.5* (1 - (double) health /maxHealth)), 2);
+            if (isEnemy) {
+                healthBarX = (int)(x + (spriteWidth - healthBarWidth) / 2 + width * 0.1);
+            } else {
+                healthBarX = (int)(x + (spriteWidth - healthBarWidth) / 2 - width * 0.1);
+            }
+
+            int healthBarY = (int)y-5;
+
+// Draw health bar background (border)
+            g2d.setColor(Color.WHITE);
+            g2d.drawRect(healthBarX, healthBarY, healthBarWidth, 2);
+
+// Draw green health portion
+            g2d.setColor(Color.GREEN);
+            g2d.fillRect(healthBarX, healthBarY, (int)(healthBarWidth * (double) health / maxHealth), 2);
+
+// Draw red damage portion
+            g2d.setColor(Color.RED);
+            g2d.fillRect(healthBarX + (int)(healthBarWidth * (double) health / maxHealth), healthBarY,
+                    (int)(healthBarWidth * (1 - (double) health / maxHealth)), 2);
         } else {
             // Fallback rendering if sprite isn't loaded
             g2d.setColor(Color.RED);
@@ -94,9 +114,12 @@ public abstract class Entity {
         return new Rectangle((int)x, (int)y, width, height);
     }
 
+    @Override
     public void setHealth(int health) {
         if (health >=0 && health <= maxHealth)
             this.health = health;
+        else
+            this.health = 0;
     }
 
     public int getHealth() {

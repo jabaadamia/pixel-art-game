@@ -4,6 +4,7 @@ import main.characters.cards.CharacterCard;
 import main.characters.cards.CharacterDefinitions;
 import main.characters.entities.Entity;
 import main.characters.entities.EntityFactory;
+import main.enemies.EnemySpawner;
 import main.projectiles.Arrow;
 import main.state.GameState;
 import main.towers.Tower;
@@ -29,8 +30,10 @@ public class GamePanel extends JPanel {
     private final int CHARACTER_START_Y;
 
     private ArrayList<Entity> playerEntities = new ArrayList<>();
+    private ArrayList<Entity> enemyEntities = new ArrayList<>();
     List<Arrow> projectiles = new ArrayList<>();
     private GameState gameState;
+    private EnemySpawner enemySpawner;
     private List<CharacterCard> playerAvailableCharacters;
 
     private InputHandler inputHandler;
@@ -55,8 +58,9 @@ public class GamePanel extends JPanel {
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
 
-        gameState = new GameState(1, 3000, 100);
+        createInitialGameState();
 
+        enemySpawner = new EnemySpawner(this, gameState);
         playerAvailableCharacters = CharacterDefinitions.getLevel1Characters();
 
         inputHandler = new InputHandler(this);
@@ -68,26 +72,40 @@ public class GamePanel extends JPanel {
 
     public void update(double delta) {
         if (gameOver) return;
-        for (Entity entity : playerEntities){
+
+        for (int i = 0; i < playerEntities.size(); i++) {
+            Entity entity = playerEntities.get(i);
             Rectangle bounds = entity.getBounds();
             boolean canWalk = true;
-            for (Entity other : playerEntities) {
-                if (!entity.equals(other) && bounds.x < other.getBounds().x && Math.abs(bounds.x - other.getBounds().x) < bounds.width+other.getBounds().width)
-                    canWalk = false;
-            }
-            if(bounds.x+bounds.width >= this.PANEL_WIDTH -this.TOWER_WIDTH -10)
+
+            Entity nextFriendly = i != 0  ? playerEntities.get(i-1) : null;
+            Entity closestOpponent = !enemyEntities.isEmpty() ? enemyEntities.getFirst() : null;
+
+
+            // if overlaps to next friendly entity or overlaps to enemy tower or overlaps to first enemy
+            if (
+                nextFriendly != null && Math.abs(bounds.x - nextFriendly.getBounds().x) < bounds.width+nextFriendly.getBounds().width ||
+                bounds.x+bounds.width >= this.PANEL_WIDTH -this.TOWER_WIDTH -10 ||
+                (closestOpponent != null && bounds.x+bounds.width >= closestOpponent.getBounds().x)
+            )
                 canWalk = false;
 
             long now = System.currentTimeMillis();
 
             if (canWalk) {
                 entity.walk();
-            }else if(bounds.x+bounds.width+entity.getRange() >= enemyTower.getX()){
+            }else if(
+                    bounds.x+bounds.width+entity.getRange() >= enemyTower.getX() ||
+                    (closestOpponent != null && bounds.x+bounds.width+entity.getRange() >= closestOpponent.getBounds().x)
+            ){
                 if(now - entity.getLastAttackTime() >= entity.getRecoilTime()) {
-                    enemyTower.setHealth(enemyTower.getHealth() - entity.getDamage());
+                    if(enemyEntities.isEmpty())
+                        entity.setAttacksTower(true);
+                    else
+                        entity.setAttacksTower(false);
+
                     entity.setLastAttackTime(now);
                 }
-                entity.setAttacksTower(true);
                 entity.attack();
                 if(enemyTower.getHealth() == 0){
                     showGameOverButton();
@@ -96,6 +114,56 @@ public class GamePanel extends JPanel {
 
             } else{
                 entity.idle();
+            }
+
+            if(entity.getHealth()<=0) {
+                playerEntities.remove(entity);
+            }
+            entity.update(delta);
+        }
+        for (int i = 0; i < enemyEntities.size(); i++) {
+            Entity entity = enemyEntities.get(i);
+            Rectangle bounds = entity.getBounds();
+            boolean canWalk = true;
+
+            Entity nextFriendly = i != 0  ? enemyEntities.get(i-1) : null;
+            Entity closestOpponent = !playerEntities.isEmpty() ? playerEntities.getFirst() : null;
+
+            // if overlaps to next friendly entity or overlaps to enemy tower or overlaps to first enemy
+            if (
+                nextFriendly != null && Math.abs(bounds.x - nextFriendly.getBounds().x) < bounds.width+nextFriendly.getBounds().width ||
+                bounds.x <= this.TOWER_WIDTH ||
+                (closestOpponent != null && bounds.x-bounds.width <= closestOpponent.getBounds().x)
+            )
+                canWalk = false;
+
+            long now = System.currentTimeMillis();
+
+            if (canWalk) {
+                entity.walk();
+            }else if(bounds.x-entity.getRange() <= playerTower.getX()+TOWER_WIDTH ||
+                    (closestOpponent != null && bounds.x-entity.getRange() <= closestOpponent.getBounds().x+closestOpponent.getBounds().width)){
+
+                if(now - entity.getLastAttackTime() >= entity.getRecoilTime()) {
+                    if(playerEntities.isEmpty())
+                        entity.setAttacksTower(true);
+                    else
+                        entity.setAttacksTower(false);
+
+                    entity.setLastAttackTime(now);
+                }
+
+                entity.attack();
+                if(playerTower.getHealth() == 0){
+                    showGameOverButton();
+                    playerWon = false;
+                }
+
+            } else{
+                entity.idle();
+            }
+            if(entity.getHealth()<=0) {
+                enemyEntities.remove(entity);
             }
             entity.update(delta);
         }
@@ -108,6 +176,7 @@ public class GamePanel extends JPanel {
                 i--;
             }
         }
+        enemySpawner.spawn();
     }
 
     @Override
@@ -130,6 +199,10 @@ public class GamePanel extends JPanel {
         for(Entity e : playerEntities){
             e.render(g2d);
         }
+        // draw enemy entities
+        for(Entity e : enemyEntities){
+            e.render(g2d);
+        }
         // draw projectiles
         for (Arrow p : projectiles) {
             p.draw(g2d);
@@ -146,7 +219,7 @@ public class GamePanel extends JPanel {
 
         // meta data
         g2d.setColor(Color.WHITE);
-        g2d.drawString("Money: " + gameState.getMoney(), cardStartX, cardStartY-10);
+        g2d.drawString("Money: " + gameState.getPlayerMoney(), cardStartX, cardStartY-10);
         g2d.drawString("soldiers: " + playerEntities.size()+"/10", cardStartX+100,cardStartY-10);
 
         // tower health bars
@@ -186,19 +259,48 @@ public class GamePanel extends JPanel {
         }
     }
     public void drawClickedCharacter(CharacterCard character){
-        if(gameState.getMoney() < character.getPrice() || playerEntities.size() >= 10) return;
+        if(gameState.getPlayerMoney() < character.getPrice() || playerEntities.size() >= 10) return;
 
-        gameState.setMoney(gameState.getMoney()-character.getPrice());
-        Entity s = EntityFactory.createEntityOf(character, CHARACTER_START_X, CHARACTER_START_Y, this);
+        gameState.setPlayerMoney(gameState.getPlayerMoney()-character.getPrice());
+        Entity s = EntityFactory.createEntityOf(character, false, CHARACTER_START_X, CHARACTER_START_Y, this);
         playerEntities.add(s);
+    }
+
+    public int getCHARACTER_START_X() {
+        return CHARACTER_START_X;
+    }
+
+    public int getCHARACTER_START_Y() {
+        return CHARACTER_START_Y;
+    }
+
+    public int getPANEL_WIDTH() {
+        return PANEL_WIDTH;
     }
 
     public void addProjectile(Arrow proj){
         projectiles.add(proj);
     }
 
+    public ArrayList<Entity> getPlayerEntities() {
+        return playerEntities;
+    }
+
+    public ArrayList<Entity> getEnemyEntities() {
+        return enemyEntities;
+    }
+
+    public void addEnemyEntity(Entity entity){
+        if(enemyEntities.size()<10)
+            enemyEntities.add(entity);
+    }
+
     public Tower getEnemyTower() {
         return enemyTower;
+    }
+
+    public Tower getPlayerTower() {
+        return playerTower;
     }
 
     public void createStaticLayer() {
@@ -213,6 +315,10 @@ public class GamePanel extends JPanel {
         enemyTower.draw(g2d, false);
 
         g2d.dispose();
+    }
+
+    public void createInitialGameState(){
+        gameState = new GameState(1, 1,1000, 500);
     }
 
     // RESTART STUFF
@@ -255,7 +361,7 @@ public class GamePanel extends JPanel {
         projectiles.clear();
 
         // reset game state
-        gameState = new GameState(1, 3000, 100);
+        createInitialGameState();
 
         // recreate static layer
         createStaticLayer();

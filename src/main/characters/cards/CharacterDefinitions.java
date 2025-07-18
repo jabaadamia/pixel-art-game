@@ -22,20 +22,20 @@ public class CharacterDefinitions {
             "Soldier",
             1,
             100,
-            70,
+            100,
             12,
             10,
-            600,
+            500,
             soldierIMG
     );
     public static final CharacterCard ARCHER = new CharacterCard(
             "Archer",
             1,
             150,
-            50,
+            80,
             10,
             120,
-            700,
+            500,
             soldierIMG
     );
 

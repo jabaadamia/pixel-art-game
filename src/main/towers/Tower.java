@@ -1,12 +1,14 @@
 package main.towers;
 
+import main.characters.Targetable;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Tower {
+public class Tower implements Targetable {
     private int x, y, width, height;
     private int health, maxHealth, level;
     private BufferedImage towerIMG;
@@ -64,5 +66,10 @@ public class Tower {
 
     public int getY() {
         return y;
+    }
+
+    @Override
+    public Rectangle getBounds() {
+        return new Rectangle(x, y, width, height);
     }
 }

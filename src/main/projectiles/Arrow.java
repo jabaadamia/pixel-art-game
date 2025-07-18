@@ -1,5 +1,9 @@
 package main.projectiles;
 
+import main.characters.Targetable;
+import main.characters.entities.Entity;
+import main.towers.Tower;
+
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -12,14 +16,18 @@ public class Arrow {
     private final float speed = 5f;
     private final BufferedImage image;
     private boolean active = true;
+    private Entity thrower;
+    private Targetable target;
 
     private final float a; // parabola coefficient
 
-    public Arrow(float startX, float startY, float targetX, float targetY, BufferedImage image) {
-        this.startX = startX;
-        this.startY = startY;
-        this.targetX = targetX;
-        this.targetY = targetY;
+    public Arrow(Entity thrower, Targetable target, BufferedImage image) {
+        this.thrower = thrower;
+        this.target = target;
+        this.startX = thrower.getBounds().x;
+        this.startY = thrower.getBounds().y;
+        this.targetX = target.getBounds().x+target.getBounds().width*0.5f;
+        this.targetY = target.getBounds().y+target.getBounds().height*0.5f;
         this.image = image;
 
         this.x = startX;
@@ -48,6 +56,8 @@ public class Arrow {
 
         if ((dx > 0 && x >= targetX) || (dx < 0 && x <= targetX)) {
             active = false;
+            //deal damage when animation finished
+            target.setHealth(target.getHealth()-thrower.getDamage());
         }
     }
 

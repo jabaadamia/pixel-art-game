@@ -7,29 +7,33 @@ import java.io.IOException;
 
 public class GameState {
 
-    private int level;
-    private int money;
-    private int health;
+    private int playerLevel;
+    private int enemyLevel;
+    private int playerMoney;
+    private int enemyMoney;
     private BufferedImage lvlBGimage;
 
-    public GameState(int level, int money, int health) {
-        this.level = level;
-        this.money = money;
-        this.health = health;
+    public GameState(int playerLevel, int enemyLevel, int playerMoney, int enemyMoney) {
+        this.playerLevel = playerLevel;
+        this.enemyLevel = enemyLevel;
+        this.playerMoney = playerMoney;
+        this.enemyMoney = enemyMoney;
     }
 
+    public int getPlayerLevel() { return playerLevel; }
+    public void setPlayerLevel(int playerLevel) { this.playerLevel = playerLevel; }
 
-    public int getLevel() { return level; }
-    public void setLevel(int level) { this.level = level; }
+    public int getEnemyLevel() {return enemyLevel;}
+    public void setEnemyLevel(int enemyLevel) {this.enemyLevel = enemyLevel;}
 
-    public int getMoney() { return money; }
-    public void setMoney(int money) { this.money = money; }
+    public int getPlayerMoney() { return playerMoney; }
+    public void setPlayerMoney(int playerMoney) { this.playerMoney = playerMoney; }
 
-    public int getHealth() { return health; }
-    public void setHealth(int health) { this.health = health; }
+    public int getEnemyMoney() {return enemyMoney;}
+    public void setEnemyMoney(int enemyMoney) {this.enemyMoney = enemyMoney;}
 
     public BufferedImage getLvlBGImage() {
-        String path = String.format("resources/background_lvl%d.png", level);
+        String path = String.format("resources/background_lvl%d.png", Math.max(playerLevel,enemyLevel));
 
         try {
             return ImageIO.read(new File(path));
