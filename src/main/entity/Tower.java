@@ -54,6 +54,8 @@ public class Tower {
     public void setHealth(int health) {
         if (health>=0 && health<=maxHealth)
             this.health = health;
+        else
+            this.health = 0;
     }
 
     public int getX() {

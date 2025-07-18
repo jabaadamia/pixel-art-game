@@ -18,6 +18,7 @@ public class InputHandler implements MouseListener {
         int my = e.getY();
 
         gamePanel.checkCharacterClick(mx, my);
+        gamePanel.checkRestartButtonClick(mx, my);
     }
 
     @Override

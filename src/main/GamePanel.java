@@ -12,35 +12,40 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class GamePanel extends JPanel {
-    private int width;
-    private int height;
-    private int towerWidth;
-    private int towerHeight;
+    private final int PANEL_WIDTH;
+    private final int PANEL_HEIGHT;
+    private final int TOWER_WIDTH;
+    private final int TOWER_HEIGHT;
 
     private Tower playerTower;
     private Tower enemyTower;
 
-    private final int characterStartX;
-    private final int characterStartY;
+    // where entities spawn
+    private final int CHARACTER_START_X;
+    private final int CHARACTER_START_Y;
 
     private ArrayList<Entity> playerEntities = new ArrayList<>();
     List<Arrow> projectiles = new ArrayList<>();
     private GameState gameState;
-    private List<CharacterCard> availableCharacters;
+    private List<CharacterCard> playerAvailableCharacters;
 
     private InputHandler inputHandler;
     private BufferedImage staticLayer;
 
-    public GamePanel(int width, int height) {
-        this.width = width;
-        this.height = height;
-        this.towerWidth = width/4;
-        this.towerHeight = towerWidth;
-        this.characterStartX = towerWidth+5;
-        this.characterStartY = height-100;
+    private boolean playerWon = false;
+    private boolean gameOver = false;
+    private boolean showRestartButton = false;
 
-        this.playerTower = new Tower(0,characterStartY-towerHeight+100, towerWidth, towerHeight, 800, 1);
-        this.enemyTower = new Tower(width-towerWidth-1,characterStartY-towerHeight+100, towerWidth, towerHeight, 800, 1);
+    public GamePanel(int width, int height) {
+        this.PANEL_WIDTH = width;
+        this.PANEL_HEIGHT = height;
+        this.TOWER_WIDTH = width/4;
+        this.TOWER_HEIGHT = TOWER_WIDTH;
+        this.CHARACTER_START_X = TOWER_WIDTH +5;
+        this.CHARACTER_START_Y = height-100;
+
+        this.playerTower = new Tower(0, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, 800, 1);
+        this.enemyTower = new Tower(width- TOWER_WIDTH -1, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, 800, 1);
 
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
@@ -48,7 +53,7 @@ public class GamePanel extends JPanel {
 
         gameState = new GameState(1, 3000, 100);
 
-        availableCharacters = CharacterDefinitions.getLevel1Characters();
+        playerAvailableCharacters = CharacterDefinitions.getLevel1Characters();
 
         inputHandler = new InputHandler(this);
         addMouseListener(inputHandler);
@@ -58,6 +63,7 @@ public class GamePanel extends JPanel {
     }
 
     public void update(double delta) {
+        if (gameOver) return;
         for (Entity entity : playerEntities){
             Rectangle bounds = entity.getBounds();
             boolean canWalk = true;
@@ -65,7 +71,7 @@ public class GamePanel extends JPanel {
                 if (!entity.equals(other) && bounds.x < other.getBounds().x && Math.abs(bounds.x - other.getBounds().x) < bounds.width+other.getBounds().width)
                     canWalk = false;
             }
-            if(bounds.x+bounds.width >= this.width-this.towerWidth-10)
+            if(bounds.x+bounds.width >= this.PANEL_WIDTH -this.TOWER_WIDTH -10)
                 canWalk = false;
 
             long now = System.currentTimeMillis();
@@ -79,6 +85,10 @@ public class GamePanel extends JPanel {
                 }
                 entity.setAttacksTower(true);
                 entity.attack();
+                if(enemyTower.getHealth() == 0){
+                    showGameOverButton();
+                    playerWon = true;
+                }
 
             } else{
                 entity.idle();
@@ -139,11 +149,15 @@ public class GamePanel extends JPanel {
         playerTower.drawHealthBar(g2d);
         enemyTower.drawHealthBar(g2d);
 
-        for (int i = 0; i < availableCharacters.size(); i++) {
+        for (int i = 0; i < playerAvailableCharacters.size(); i++) {
             int x = cardStartX + (i % btnPerRow) * (56 + padding);
             int y = cardStartY + (i / btnPerRow) * (108 + padding);
 
-            availableCharacters.get(i).renderButton(g2d, x, y);
+            playerAvailableCharacters.get(i).renderButton(g2d, x, y);
+        }
+
+        if (gameOver && showRestartButton) {
+            drawGameOverScreen(g2d);
         }
     }
 
@@ -155,14 +169,14 @@ public class GamePanel extends JPanel {
         int btnWidth = 56;
         int btnHeight = 56;
 
-        for (int i = 0; i < availableCharacters.size(); i++) {
+        for (int i = 0; i < playerAvailableCharacters.size(); i++) {
             int x = startX + (i % btnPerRow) * (btnWidth + padding);
             int y = startY + (i / btnPerRow) * (btnHeight + padding + 56);
 
             if (mx >= x && mx <= x + btnWidth &&
                     my >= y && my <= y + btnHeight) {
 
-                drawClickedCharacter(availableCharacters.get(i));
+                drawClickedCharacter(playerAvailableCharacters.get(i));
                 break;
             }
         }
@@ -171,7 +185,7 @@ public class GamePanel extends JPanel {
         if(gameState.getMoney() < character.getPrice() || playerEntities.size() >= 10) return;
 
         gameState.setMoney(gameState.getMoney()-character.getPrice());
-        Entity s = EntityFactory.createEntityOf(character, characterStartX, characterStartY, this);
+        Entity s = EntityFactory.createEntityOf(character, CHARACTER_START_X, CHARACTER_START_Y, this);
         playerEntities.add(s);
     }
 
@@ -184,16 +198,96 @@ public class GamePanel extends JPanel {
     }
 
     public void createStaticLayer() {
-        staticLayer = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        staticLayer = new BufferedImage(PANEL_WIDTH, PANEL_HEIGHT, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2d = staticLayer.createGraphics();
 
         // draw background
-        g2d.drawImage(gameState.getLvlBGImage(), 0, 0, width, height, null);
+        g2d.drawImage(gameState.getLvlBGImage(), 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
 
         // draw towers
         playerTower.draw(g2d, true);
         enemyTower.draw(g2d, false);
 
         g2d.dispose();
+    }
+
+    // RESTART STUFF
+    private Rectangle restartButtonBounds;
+
+    private void initializeRestartButton() {
+        int RESTART_BUTTON_WIDTH = 120;
+        int RESTART_BUTTON_HEIGHT = 40;
+        int buttonX = (PANEL_WIDTH - RESTART_BUTTON_WIDTH) / 2;
+        int buttonY = PANEL_HEIGHT / 2 + 50;
+
+        restartButtonBounds = new Rectangle(buttonX, buttonY, RESTART_BUTTON_WIDTH, RESTART_BUTTON_HEIGHT);
+    }
+
+    public void showGameOverButton() {
+        gameOver = true;
+        showRestartButton = true;
+        if (restartButtonBounds == null) {
+            initializeRestartButton();
+        }
+    }
+
+    public void checkRestartButtonClick(int mx, int my) {
+        if (showRestartButton && restartButtonBounds != null && restartButtonBounds.contains(mx, my)) {
+            restartGame();
+        }
+    }
+
+    public void restartGame() {
+        gameOver = false;
+        showRestartButton = false;
+        playerWon = false;
+
+        // reset towers
+        playerTower.setHealth(800);
+        enemyTower.setHealth(800);
+
+        // clear all entities and projectiles
+        playerEntities.clear();
+        projectiles.clear();
+
+        // reset game state
+        gameState = new GameState(1, 3000, 100);
+
+        // recreate static layer
+        createStaticLayer();
+
+        requestFocusInWindow();
+    }
+    private void drawGameOverScreen(Graphics2D g2d) {
+        // blur background
+        g2d.setColor(new Color(0, 0, 0, 128));
+        g2d.fillRect(0, 0, PANEL_WIDTH, PANEL_HEIGHT);
+
+        // draw text
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Arial", Font.BOLD, 48));
+        FontMetrics fm = g2d.getFontMetrics();
+        String gameOverText = playerWon ? "You WIN!" : "Game Over :(";
+        int textX = (PANEL_WIDTH - fm.stringWidth(gameOverText)) / 2;
+        int textY = PANEL_HEIGHT / 2 - 50;
+        g2d.drawString(gameOverText, textX, textY);
+
+        // draw restart button
+        if (restartButtonBounds != null) {
+            g2d.setColor(new Color(70, 130, 180));
+            g2d.fillRect(restartButtonBounds.x, restartButtonBounds.y,
+                    restartButtonBounds.width, restartButtonBounds.height);
+
+            g2d.setColor(Color.WHITE);
+            g2d.drawRect(restartButtonBounds.x, restartButtonBounds.y,
+                    restartButtonBounds.width, restartButtonBounds.height);
+
+            g2d.setFont(new Font("Arial", Font.BOLD, 16));
+            fm = g2d.getFontMetrics();
+            String buttonText = "Restart";
+            int buttonTextX = restartButtonBounds.x + (restartButtonBounds.width - fm.stringWidth(buttonText)) / 2;
+            int buttonTextY = restartButtonBounds.y + (restartButtonBounds.height + fm.getAscent()) / 2;
+            g2d.drawString(buttonText, buttonTextX, buttonTextY);
+        }
     }
 }
