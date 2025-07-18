@@ -11,8 +11,8 @@ import java.io.IOException;
 public class Soldier extends Entity {
     GamePanel panel;
 
-    public Soldier(boolean isEnemy, float x, float y, int width, int height, int health, int range, int damage, long recoilTime, GamePanel panel) {
-        super(isEnemy, x, y, width, height, health, range, damage, recoilTime);
+    public Soldier(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime, GamePanel panel) {
+        super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
         try {
             walkFrames = new BufferedImage[8];

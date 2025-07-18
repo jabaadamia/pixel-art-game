@@ -22,6 +22,8 @@ public class GamePanel extends JPanel {
     private final int TOWER_WIDTH;
     private final int TOWER_HEIGHT;
 
+    private final float KILL_MONEY_PERCENT = 1.33f; // When killing entity get 133% of its price
+
     private Tower playerTower;
     private Tower enemyTower;
 
@@ -118,6 +120,7 @@ public class GamePanel extends JPanel {
 
             if(entity.getHealth()<=0) {
                 playerEntities.remove(entity);
+                gameState.addToEnemyMoney((int) (entity.getPrice()*KILL_MONEY_PERCENT));
             }
             entity.update(delta);
         }
@@ -164,6 +167,7 @@ public class GamePanel extends JPanel {
             }
             if(entity.getHealth()<=0) {
                 enemyEntities.remove(entity);
+                gameState.addToPlayerMoney((int) (entity.getPrice()*KILL_MONEY_PERCENT));
             }
             entity.update(delta);
         }
@@ -318,7 +322,7 @@ public class GamePanel extends JPanel {
     }
 
     public void createInitialGameState(){
-        gameState = new GameState(1, 1,1000, 500);
+        gameState = new GameState(1, 1,500, 500);
     }
 
     // RESTART STUFF

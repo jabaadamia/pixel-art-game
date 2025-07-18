@@ -9,7 +9,7 @@ public abstract class Entity implements Targetable {
     protected float x, y;
     protected int width, height;
     protected boolean isEnemy;
-    protected int maxHealth, health;
+    protected int maxHealth, health, price;
     protected int range, damage;
     protected long recoilTime;
     protected long lastAttackTime = 0;
@@ -32,7 +32,7 @@ public abstract class Entity implements Targetable {
     protected BufferedImage[] attackFrames;
     protected BufferedImage[] deathFrames;
 
-    public Entity(boolean isEnemy, float x, float y, int width, int height, int health, int range, int damage, long recoilTime) {
+    public Entity(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime) {
         this.isEnemy = isEnemy;
         this.x = x;
         this.y = y;
@@ -43,6 +43,7 @@ public abstract class Entity implements Targetable {
         this.recoilTime = recoilTime;
         this.health = health;
         this.maxHealth = health;
+        this.price = price;
     }
 
     public abstract void update(double delta);
@@ -124,6 +125,10 @@ public abstract class Entity implements Targetable {
 
     public int getHealth() {
         return health;
+    }
+
+    public int getPrice() {
+        return price;
     }
 
     public int getRange() {

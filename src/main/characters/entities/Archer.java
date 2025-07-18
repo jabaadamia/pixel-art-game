@@ -12,8 +12,8 @@ import java.io.IOException;
 public class Archer extends Entity {
     GamePanel panel;
     BufferedImage arrowIMG;
-    public Archer(boolean isEnemy, float x, float y, int width, int height, int health, int range, int damage, long recoilTime, GamePanel panel) {
-        super(isEnemy, x, y, width, height, health, range, damage, recoilTime);
+    public Archer(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime, GamePanel panel) {
+        super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
         try {
             arrowIMG = ImageIO.read(new File("resources/arrow.png"));

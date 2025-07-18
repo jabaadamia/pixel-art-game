@@ -28,9 +28,17 @@ public class GameState {
 
     public int getPlayerMoney() { return playerMoney; }
     public void setPlayerMoney(int playerMoney) { this.playerMoney = playerMoney; }
+    public void addToPlayerMoney(int amount){
+        if (playerMoney+amount >= 0)
+            playerMoney+=amount;
+    }
 
     public int getEnemyMoney() {return enemyMoney;}
     public void setEnemyMoney(int enemyMoney) {this.enemyMoney = enemyMoney;}
+    public void addToEnemyMoney(int amount){
+        if(enemyMoney+amount >= 0)
+            enemyMoney += amount;
+    }
 
     public BufferedImage getLvlBGImage() {
         String path = String.format("resources/background_lvl%d.png", Math.max(playerLevel,enemyLevel));
