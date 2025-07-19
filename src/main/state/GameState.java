@@ -1,6 +1,7 @@
 package main.state;
 
 import main.characters.entities.Entity;
+import main.util.SpriteLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -59,16 +60,6 @@ public class GameState {
 
     public BufferedImage getLvlBGImage() {
         String path = String.format("background_lvl%d.png", Math.max(playerLevel,enemyLevel));
-
-        try (InputStream in = GameState.class
-                .getClassLoader()
-                .getResourceAsStream(path)) {
-            if (in == null) {
-                throw new RuntimeException("Resource not found: " + path);
-            }
-            return ImageIO.read(in);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load image: " + path, e);
-        }
+        return SpriteLoader.load(path);
     }
 }

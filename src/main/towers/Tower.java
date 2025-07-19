@@ -2,6 +2,7 @@ package main.towers;
 
 import main.characters.Targetable;
 import main.characters.entities.Entity;
+import main.util.SpriteLoader;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -31,22 +32,8 @@ public class Tower implements Targetable {
                 String.format("rot-tower_lvl%d.png", level) :
                 String.format("tower_lvl%d.png", level);
 
-        try (InputStream in = Tower.class
-                .getClassLoader()
-                .getResourceAsStream(path)) {
-            if (in == null) {
-                throw new RuntimeException("Resource not found: " + path);
-            }
-            towerIMG = ImageIO.read(in);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to load image: " + path, e);
-        }
-        if(towerIMG != null) {
-            g2d.drawImage(towerIMG, x, y, width, height, null);
-        }else { // white box if not image
-            g2d.setColor(Color.white);
-            g2d.drawRect(x,y, width, height);
-        }
+       towerIMG = SpriteLoader.load(path);
+       g2d.drawImage(towerIMG, x, y, width, height, null);
     }
 
     public void drawHealthBar(Graphics2D g2d){

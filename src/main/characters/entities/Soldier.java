@@ -10,30 +10,18 @@ public class Soldier extends Entity {
     public Soldier(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime, GamePanel panel) {
         super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
-        walkFrames = new BufferedImage[8];
-        attackFrames = new BufferedImage[6];
-        deathFrames = new BufferedImage[4];
-        BufferedImage walkIMG;
-        BufferedImage attackIMG;
-        BufferedImage deathIMG;
-        // get rotated images if enemy
-        if(isEnemy){
-            walkIMG   = loadImage("characters/rot_soldierWalk.png");
-            attackIMG = loadImage("characters/rot_soldierAttack.png");
-            deathIMG  = loadImage("characters/rot_soldierDeath.png");
-            for (int i = 7; i >= 0; i--) {walkFrames[i] = walkIMG.getSubimage(100*i+29, 38, width, height);}
-            for (int i = 5; i >= 0; i--) {attackFrames[i] = attackIMG.getSubimage(100*i+29, 38, width, height);}
-            for (int i = 3; i >= 0; i--) {deathFrames[i] = deathIMG.getSubimage(100*i+29, 38, width, height);}
-        }else{
-            walkIMG = loadImage("characters/soldierWalk.png");
-            attackIMG = loadImage("characters/soldierAttack.png");
-            deathIMG = loadImage("characters/soldierDeath.png");
-            for (int i = 0; i < 8; i++) {walkFrames[i] = walkIMG.getSubimage(100*i+40, 38, width, height);}
-            for (int i = 0; i < 6; i++) {attackFrames[i] = attackIMG.getSubimage(100*i+40, 38, width, height);}
-            for (int i = 0; i < 4; i++) {deathFrames[i] = deathIMG.getSubimage(100*i+40, 38, width, height);}
-        }
 
-        this.sprite = walkIMG.getSubimage(40, 38, width, height);
+        if (isEnemy) {
+            walkFrames = ArcherResources.walkFramesEnemy;
+            attackFrames = ArcherResources.attackFramesEnemy;
+            deathFrames = ArcherResources.deathFramesEnemy;
+            this.sprite = ArcherResources.walkFramesEnemy[0];
+        } else {
+            walkFrames = ArcherResources.walkFramesPlayer;
+            attackFrames = ArcherResources.attackFramesPlayer;
+            deathFrames = ArcherResources.deathFramesPlayer;
+            this.sprite = ArcherResources.walkFramesPlayer[0];
+        }
     }
 
     @Override
