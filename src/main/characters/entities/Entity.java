@@ -2,12 +2,8 @@ package main.characters.entities;
 
 import main.characters.Targetable;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
 
 public abstract class Entity implements Targetable {
     protected float x, y;

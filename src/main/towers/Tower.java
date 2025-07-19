@@ -1,16 +1,11 @@
 package main.towers;
 
 import main.characters.Targetable;
-import main.characters.entities.Entity;
 import main.util.SpriteLoader;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UncheckedIOException;
+
 
 public class Tower implements Targetable {
     private int x, y, width, height;

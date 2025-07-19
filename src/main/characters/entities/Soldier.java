@@ -2,8 +2,6 @@ package main.characters.entities;
 
 import main.GamePanel;
 
-import java.awt.image.BufferedImage;
-
 public class Soldier extends Entity {
     GamePanel panel;
 
@@ -12,15 +10,15 @@ public class Soldier extends Entity {
         this.panel = panel;
 
         if (isEnemy) {
-            walkFrames = ArcherResources.walkFramesEnemy;
-            attackFrames = ArcherResources.attackFramesEnemy;
-            deathFrames = ArcherResources.deathFramesEnemy;
-            this.sprite = ArcherResources.walkFramesEnemy[0];
+            walkFrames = SoldierResources.walkFramesEnemy;
+            attackFrames = SoldierResources.attackFramesEnemy;
+            deathFrames = SoldierResources.deathFramesEnemy;
+            this.sprite = SoldierResources.walkFramesEnemy[0];
         } else {
-            walkFrames = ArcherResources.walkFramesPlayer;
-            attackFrames = ArcherResources.attackFramesPlayer;
-            deathFrames = ArcherResources.deathFramesPlayer;
-            this.sprite = ArcherResources.walkFramesPlayer[0];
+            walkFrames = SoldierResources.walkFramesPlayer;
+            attackFrames = SoldierResources.attackFramesPlayer;
+            deathFrames = SoldierResources.deathFramesPlayer;
+            this.sprite = SoldierResources.walkFramesPlayer[0];
         }
     }
 
