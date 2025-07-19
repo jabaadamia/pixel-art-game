@@ -2,8 +2,12 @@ package main.characters.entities;
 
 import main.characters.Targetable;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 
 public abstract class Entity implements Targetable {
     protected float x, y;
@@ -165,5 +169,18 @@ public abstract class Entity implements Targetable {
 
     public void setAttacksTower(boolean attacksTower) {
         this.attacksTower = attacksTower;
+    }
+
+    protected static BufferedImage loadImage(String path) {
+        try (InputStream in = Entity.class
+                .getClassLoader()
+                .getResourceAsStream(path)) {
+            if (in == null) {
+                throw new RuntimeException("Resource not found: " + path);
+            }
+            return ImageIO.read(in);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to load image: " + path, e);
+        }
     }
 }

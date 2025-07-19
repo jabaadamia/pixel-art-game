@@ -2,8 +2,8 @@ package main.characters.cards;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 public class CharacterDefinitions {
@@ -11,8 +11,13 @@ public class CharacterDefinitions {
     public static BufferedImage soldierIMG;
 
     static {
-        try {
-            soldierIMG = ImageIO.read(new File("resources/characters/soldierWalk.png")).getSubimage(35, 35, 28, 28);
+        try (InputStream in = CharacterDefinitions.class
+                .getClassLoader()
+                .getResourceAsStream("characters/rot_soldierWalk.png")){
+            if (in == null) {
+                throw new RuntimeException("Resource not found: characters/rot_soldierWalk.png");
+            }
+            soldierIMG = ImageIO.read(in).getSubimage(35,35,28,28);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

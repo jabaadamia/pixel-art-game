@@ -13,7 +13,7 @@ public class EnemySpawner {
     private GamePanel gamePanel;
     private GameState gameState;
     private List<CharacterCard> enemyAvailableCharacters;
-    private long lastTimeSpawned = 0;
+    private long lastTimeSpawned = System.currentTimeMillis()+2000; // 2 sec delay after start
 
     public EnemySpawner(GamePanel gamePanel, GameState gameState){
         this.gamePanel = gamePanel;

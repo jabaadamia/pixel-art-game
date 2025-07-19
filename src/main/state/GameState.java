@@ -1,9 +1,13 @@
 package main.state;
 
+import main.characters.entities.Entity;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 
 public class GameState {
 
@@ -54,12 +58,17 @@ public class GameState {
     }
 
     public BufferedImage getLvlBGImage() {
-        String path = String.format("resources/background_lvl%d.png", Math.max(playerLevel,enemyLevel));
+        String path = String.format("background_lvl%d.png", Math.max(playerLevel,enemyLevel));
 
-        try {
-            return ImageIO.read(new File(path));
+        try (InputStream in = GameState.class
+                .getClassLoader()
+                .getResourceAsStream(path)) {
+            if (in == null) {
+                throw new RuntimeException("Resource not found: " + path);
+            }
+            return ImageIO.read(in);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException("Failed to load image: " + path, e);
         }
     }
 }

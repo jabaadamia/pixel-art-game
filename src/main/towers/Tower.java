@@ -1,12 +1,15 @@
 package main.towers;
 
 import main.characters.Targetable;
+import main.characters.entities.Entity;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
 
 public class Tower implements Targetable {
     private int x, y, width, height;
@@ -25,13 +28,18 @@ public class Tower implements Targetable {
 
     public void draw(Graphics2D g2d, boolean rotate){
         String path = rotate ?
-                String.format("resources/rot-tower_lvl%d.png", level) :
-                String.format("resources/tower_lvl%d.png", level);
+                String.format("rot-tower_lvl%d.png", level) :
+                String.format("tower_lvl%d.png", level);
 
-        try {
-            towerIMG = ImageIO.read(new File(path));
+        try (InputStream in = Tower.class
+                .getClassLoader()
+                .getResourceAsStream(path)) {
+            if (in == null) {
+                throw new RuntimeException("Resource not found: " + path);
+            }
+            towerIMG = ImageIO.read(in);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException("Failed to load image: " + path, e);
         }
         if(towerIMG != null) {
             g2d.drawImage(towerIMG, x, y, width, height, null);
