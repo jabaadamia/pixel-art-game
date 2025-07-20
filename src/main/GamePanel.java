@@ -327,7 +327,7 @@ public class GamePanel extends JPanel {
     }
 
     public void createInitialGameState(){
-        gameState = new GameState(1, 1,500, 500);
+        gameState = new GameState(1, 1,1000, 1000);
     }
 
     // RESTART STUFF

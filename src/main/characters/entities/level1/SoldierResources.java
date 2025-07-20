@@ -1,4 +1,4 @@
-package main.characters.entities;
+package main.characters.entities.level1;
 
 import main.util.SpriteLoader;
 
@@ -7,43 +7,36 @@ import java.awt.image.BufferedImage;
 public class SoldierResources {
     public static final BufferedImage[] walkFramesEnemy;
     public static final BufferedImage[] attackFramesEnemy;
-    public static final BufferedImage[] deathFramesEnemy;
 
     public static final BufferedImage[] walkFramesPlayer;
     public static final BufferedImage[] attackFramesPlayer;
-    public static final BufferedImage[] deathFramesPlayer;
 
     static {
 
         walkFramesEnemy = new BufferedImage[8];
         attackFramesEnemy = new BufferedImage[6];
-        deathFramesEnemy = new BufferedImage[4];
 
         walkFramesPlayer = new BufferedImage[8];
         attackFramesPlayer = new BufferedImage[6];
-        deathFramesPlayer = new BufferedImage[4];
+
+        int frameWidth = 40;
+        int frameHeight = 40;
+        int frameSpacing = 100;
 
         BufferedImage walkIMGEnemy = SpriteLoader.load("characters/rot_soldierWalk.png");
         BufferedImage attackIMGEnemy = SpriteLoader.load("characters/rot_soldierAttack.png");
-        BufferedImage deathIMGEnemy = SpriteLoader.load("characters/rot_soldierDeath.png");
 
         BufferedImage walkIMGPlayer = SpriteLoader.load("characters/soldierWalk.png");
         BufferedImage attackIMGPlayer = SpriteLoader.load("characters/soldierAttack.png");
-        BufferedImage deathIMGPlayer = SpriteLoader.load("characters/soldierDeath.png");
 
         for (int i = 0; i < 8; i++) {
-            walkFramesEnemy[7 - i] = walkIMGEnemy.getSubimage(100 * i + 29, 38, 28, 28);
-            walkFramesPlayer[i] = walkIMGPlayer.getSubimage(100 * i + 40, 38, 28, 28);
+            walkFramesEnemy[7 - i] = walkIMGEnemy.getSubimage(frameSpacing * i + 20, 20, frameWidth, frameHeight);
+            walkFramesPlayer[i] = walkIMGPlayer.getSubimage(frameSpacing * i + 40, 20, frameHeight, frameHeight);
         }
 
         for (int i = 0; i < 6; i++) {
-            attackFramesEnemy[5 - i] = attackIMGEnemy.getSubimage(100 * i + 29, 38, 28, 28);
-            attackFramesPlayer[i] = attackIMGPlayer.getSubimage(100 * i + 40, 38, 28, 28);
-        }
-
-        for (int i = 0; i < 4; i++) {
-            deathFramesEnemy[3 - i] = deathIMGEnemy.getSubimage(100 * i + 29, 38, 28, 28);
-            deathFramesPlayer[i] = deathIMGPlayer.getSubimage(100 * i + 40, 38, 28, 28);
+            attackFramesEnemy[5 - i] = attackIMGEnemy.getSubimage(frameSpacing * i + 20, 20, frameWidth, frameHeight);
+            attackFramesPlayer[i] = attackIMGPlayer.getSubimage(frameSpacing * i + 40, 20, frameWidth, frameHeight);
         }
     }
 }

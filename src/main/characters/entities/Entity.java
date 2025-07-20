@@ -20,17 +20,14 @@ public abstract class Entity implements Targetable {
     // for animations
     protected int currentAttackFrame = 0;
     protected int currentWalkFrame = 0;
-    protected int currentDeathFrame = 0;
     protected long lastFrameTime = 0;
     protected int frameDuration = 250; // ms per frame
     // state
     protected boolean isAttacking = false;
     protected boolean isWalking = true;
-    protected boolean isDying = false;
 
     protected BufferedImage[] walkFrames;
     protected BufferedImage[] attackFrames;
-    protected BufferedImage[] deathFrames;
 
     public Entity(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime) {
         this.isEnemy = isEnemy;
@@ -51,7 +48,6 @@ public abstract class Entity implements Targetable {
         if(!isAttacking) {
             isAttacking = true;
             isWalking = false;
-            isDying = false;
             currentAttackFrame = 0;
             sprite = attackFrames[currentAttackFrame];
         }
@@ -61,7 +57,6 @@ public abstract class Entity implements Targetable {
         if(!isWalking) {
             isWalking = true;
             isAttacking = false;
-            isDying = false;
             currentWalkFrame = 0;
             sprite = walkFrames[currentWalkFrame];
         }
@@ -70,7 +65,6 @@ public abstract class Entity implements Targetable {
     public void idle(){
         isWalking = false;
         isAttacking = false;
-        isDying = false;
         sprite = walkFrames[0];
     }
 
@@ -81,6 +75,10 @@ public abstract class Entity implements Targetable {
             int healthBarX;
             // entity image
             g2d.drawImage(sprite, (int)x, (int)y, spriteWidth, height*2, null);
+            g2d.setColor(Color.RED); // or any color for the hitbox
+
+            // rectangle for testing
+            g2d.drawRect((int)x, (int)y, spriteWidth, height * 2);
             // health bar
             if (isEnemy) {
                 healthBarX = (int)(x + (spriteWidth - healthBarWidth) / 2 + width * 0.1);
@@ -90,15 +88,15 @@ public abstract class Entity implements Targetable {
 
             int healthBarY = (int)y-5;
 
-// Draw health bar background (border)
+            // health bar border
             g2d.setColor(Color.WHITE);
             g2d.drawRect(healthBarX, healthBarY, healthBarWidth, 2);
 
-// Draw green health portion
+            // green health portion
             g2d.setColor(Color.GREEN);
             g2d.fillRect(healthBarX, healthBarY, (int)(healthBarWidth * (double) health / maxHealth), 2);
 
-// Draw red damage portion
+            // red damage portion
             g2d.setColor(Color.RED);
             g2d.fillRect(healthBarX + (int)(healthBarWidth * (double) health / maxHealth), healthBarY,
                     (int)(healthBarWidth * (1 - (double) health / maxHealth)), 2);
@@ -149,10 +147,6 @@ public abstract class Entity implements Targetable {
 
     public boolean isWalking() {
         return isWalking;
-    }
-
-    public boolean isDying() {
-        return isDying;
     }
 
     public long getLastAttackTime() {

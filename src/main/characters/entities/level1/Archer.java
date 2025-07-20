@@ -1,7 +1,8 @@
-package main.characters.entities;
+package main.characters.entities.level1;
 
 import main.GamePanel;
 import main.characters.Targetable;
+import main.characters.entities.Entity;
 import main.projectiles.Arrow;
 
 import java.awt.image.BufferedImage;
@@ -17,12 +18,10 @@ public class Archer extends Entity {
         if (isEnemy) {
             walkFrames = ArcherResources.walkFramesEnemy;
             attackFrames = ArcherResources.attackFramesEnemy;
-            deathFrames = ArcherResources.deathFramesEnemy;
             this.sprite = ArcherResources.walkFramesEnemy[0];
         } else {
             walkFrames = ArcherResources.walkFramesPlayer;
             attackFrames = ArcherResources.attackFramesPlayer;
-            deathFrames = ArcherResources.deathFramesPlayer;
             this.sprite = ArcherResources.walkFramesPlayer[0];
         }
     }

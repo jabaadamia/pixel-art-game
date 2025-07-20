@@ -1,6 +1,7 @@
-package main.characters.entities;
+package main.characters.entities.level1;
 
 import main.GamePanel;
+import main.characters.entities.Entity;
 
 public class Soldier extends Entity {
     GamePanel panel;
@@ -12,12 +13,10 @@ public class Soldier extends Entity {
         if (isEnemy) {
             walkFrames = SoldierResources.walkFramesEnemy;
             attackFrames = SoldierResources.attackFramesEnemy;
-            deathFrames = SoldierResources.deathFramesEnemy;
             this.sprite = SoldierResources.walkFramesEnemy[0];
         } else {
             walkFrames = SoldierResources.walkFramesPlayer;
             attackFrames = SoldierResources.attackFramesPlayer;
-            deathFrames = SoldierResources.deathFramesPlayer;
             this.sprite = SoldierResources.walkFramesPlayer[0];
         }
     }
@@ -51,7 +50,6 @@ public class Soldier extends Entity {
                 if (currentAttackFrame >= attackFrames.length) {
                     currentAttackFrame = 0;
 
-                    // bow animation completed trigger arrow
                     if(attacksTower){
                         if (isEnemy)
                             panel.getPlayerTower().setHealth(panel.getPlayerTower().getHealth()-damage);
@@ -69,17 +67,5 @@ public class Soldier extends Entity {
                 sprite = attackFrames[currentAttackFrame];
             }
         }
-    }
-
-    public void attack() {
-        super.attack();
-    }
-
-    public void walk() {
-        super.walk();
-    }
-
-    public void idle(){
-        super.idle();
     }
 }

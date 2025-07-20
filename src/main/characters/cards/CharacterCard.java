@@ -15,8 +15,8 @@ public class CharacterCard {
     private final long recoilTime; // ms
     private boolean isLocked;
     private BufferedImage img;
-    private final int width = 28;
-    private final int height = 28;
+    private final int width = 30;
+    private final int height = 30;
 
     public CharacterCard(String name, int level, int price, int health, int damage, int range, long recoilTime, BufferedImage img) {
         this.name = name;
