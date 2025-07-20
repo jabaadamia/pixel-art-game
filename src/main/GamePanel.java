@@ -51,8 +51,8 @@ public class GamePanel extends JPanel {
         this.PANEL_HEIGHT = height;
         this.TOWER_WIDTH = width/4;
         this.TOWER_HEIGHT = TOWER_WIDTH;
-        this.CHARACTER_START_X = TOWER_WIDTH +5;
-        this.CHARACTER_START_Y = height-200;
+        this.CHARACTER_START_X = TOWER_WIDTH -50;
+        this.CHARACTER_START_Y = height-220;
 
         createInitialTowers();
         setPreferredSize(new Dimension(width, height));
@@ -86,7 +86,7 @@ public class GamePanel extends JPanel {
             // if overlaps to next friendly entity or overlaps to enemy tower or overlaps to first enemy
             if (
                 nextFriendly != null && Math.abs(bounds.x - nextFriendly.getBounds().x) < bounds.width+nextFriendly.getBounds().width ||
-                bounds.x+bounds.width >= this.PANEL_WIDTH -this.TOWER_WIDTH -10 ||
+                bounds.x+bounds.width >= PANEL_WIDTH-CHARACTER_START_X+10 ||
                 (closestOpponent != null && bounds.x+bounds.width >= closestOpponent.getBounds().x)
             )
                 canWalk = false;
@@ -137,7 +137,7 @@ public class GamePanel extends JPanel {
             // if overlaps to next friendly entity or overlaps to enemy tower or overlaps to first enemy
             if (
                 nextFriendly != null && Math.abs(bounds.x - nextFriendly.getBounds().x) < bounds.width+nextFriendly.getBounds().width ||
-                bounds.x <= this.TOWER_WIDTH ||
+                bounds.x <= CHARACTER_START_X ||
                 (closestOpponent != null && bounds.x-bounds.width <= closestOpponent.getBounds().x)
             )
                 canWalk = false;
@@ -340,6 +340,10 @@ public class GamePanel extends JPanel {
         playerTower.draw(g2d, false);
         enemyTower.draw(g2d, true);
 
+        // dark background behind cards
+        g2d.setColor(new Color(0, 0, 0, 150));
+        g2d.fillRoundRect(0, 0, 400, 160, 10, 30);
+
         g2d.dispose();
     }
 
@@ -348,8 +352,8 @@ public class GamePanel extends JPanel {
     }
 
     public void createInitialTowers(){
-        this.playerTower = new Tower(0, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, LevelDefinitions.LVL1_TOWER_HP, 1);
-        this.enemyTower = new Tower(PANEL_WIDTH- TOWER_WIDTH -1, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, LevelDefinitions.LVL1_TOWER_HP, 1);
+        this.playerTower = new Tower(-60, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, LevelDefinitions.LVL1_TOWER_HP, 1);
+        this.enemyTower = new Tower(PANEL_WIDTH- TOWER_WIDTH +60, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, LevelDefinitions.LVL1_TOWER_HP, 1);
     }
 
     // RESTART STUFF
@@ -392,10 +396,13 @@ public class GamePanel extends JPanel {
 
         // clear all entities and projectiles
         playerEntities.clear();
+        enemyEntities.clear();
         projectiles.clear();
 
         // reset game state
         createInitialGameState();
+
+        enemySpawner = new EnemySpawner(this, gameState);
 
         // recreate static layer
         createStaticLayer();

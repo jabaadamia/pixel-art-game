@@ -35,7 +35,7 @@ public class EnemySpawner {
                 gamePanel.addEnemyEntity(
                         EntityFactory.createEntityOf(
                                 randomCharacter, true,
-                                gamePanel.getPANEL_WIDTH()-gamePanel.getCHARACTER_START_X(),
+                                gamePanel.getPANEL_WIDTH()-gamePanel.getCHARACTER_START_X()-40,
                                 gamePanel.getCHARACTER_START_Y(),
                                 gamePanel
                         )

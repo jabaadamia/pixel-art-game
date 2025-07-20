@@ -34,11 +34,11 @@ public class Tower implements Targetable {
 
     public void drawHealthBar(Graphics2D g2d){
         g2d.setColor(Color.white);
-        g2d.drawRect((int)(x+width*0.15), y-10, (int)(width*0.7), 2);
+        g2d.drawRect((int)(x+width*0.25), y-10, (int)(width*0.5), 5);
         g2d.setColor(Color.green);
-        g2d.fillRect((int)(x+width*0.15), y-10, (int)(width*0.7* (double) health / maxHealth), 2);
+        g2d.fillRect((int)(x+width*0.25), y-10, (int)(width*0.5* (double) health / maxHealth), 5);
         g2d.setColor(Color.red);
-        g2d.fillRect((int)(x+width*0.15+width*0.7* (double) health / maxHealth), y-10, (int)(width*0.7* (1 - (double) health /maxHealth)), 2);
+        g2d.fillRect((int)(x+width*0.25+width*0.5* (double) health / maxHealth), y-10, (int)(width*0.5* (1 - (double) health /maxHealth)), 5);
     }
 
     public void levelUp(){

@@ -75,10 +75,10 @@ public abstract class Entity implements Targetable {
             int healthBarX;
             // entity image
             g2d.drawImage(sprite, (int)x, (int)y, spriteWidth, height*2, null);
-            g2d.setColor(Color.RED); // or any color for the hitbox
-
-            // rectangle for testing
-            g2d.drawRect((int)x, (int)y, spriteWidth, height * 2);
+//            g2d.setColor(Color.RED); // or any color for the hitbox
+//
+//            // rectangle for testing
+//            g2d.drawRect((int)x, (int)y, spriteWidth, height * 2);
             // health bar
             if (isEnemy) {
                 healthBarX = (int)(x + (spriteWidth - healthBarWidth) / 2 + width * 0.1);
