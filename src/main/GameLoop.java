@@ -2,7 +2,7 @@ package main;
 
 public class GameLoop implements Runnable {
     private boolean running = false;
-    private final int TARGET_FPS = 60;
+    private final int TARGET_FPS = 120;
     private final long OPTIMAL_TIME = 1000000000 / TARGET_FPS;
 
     private GamePanel gamePanel;

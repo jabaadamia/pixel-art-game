@@ -62,18 +62,18 @@ public class CharacterDefinitions {
     );
 
     public static final CharacterCard SAMURAI_ARCHER = new CharacterCard(
-            "Archer",
+            "Samurai\nArcher",
             2,
             350,
             230,
-            20,
+            40,
             120,
             500,
             archerSamuraiIMG
     );
 
     public static final CharacterCard SAMURAI_COMMANDER = new CharacterCard(
-            "Commander",
+            "Samurai\nCommander",
             2,
             1000,
             600,

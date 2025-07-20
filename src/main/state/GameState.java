@@ -57,4 +57,18 @@ public class GameState {
         String path = String.format("background_lvl%d.png", Math.max(playerLevel,enemyLevel));
         return SpriteLoader.load(path);
     }
+
+    public int getCurrentLevelXP(boolean player){
+        switch (player ? getPlayerLevel() : getEnemyLevel()){
+            case 1 -> {
+                return LevelDefinitions.LVL1XP;
+            }
+            case 2 -> {
+                return LevelDefinitions.LVL2XP;
+            }
+            default -> {
+                return 1000;
+            }
+        }
+    }
 }

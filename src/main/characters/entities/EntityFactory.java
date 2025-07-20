@@ -5,6 +5,8 @@ import main.characters.cards.CharacterCard;
 import main.characters.entities.level1.Archer;
 import main.characters.entities.level1.Soldier;
 import main.characters.entities.level2.Samurai;
+import main.characters.entities.level2.SamuraiArcher;
+import main.characters.entities.level2.SamuraiCommander;
 
 public class EntityFactory {
 
@@ -16,6 +18,10 @@ public class EntityFactory {
                     new Archer(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
             case "Samurai" ->
                     new Samurai(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
+            case "Samurai\nArcher" ->
+                    new SamuraiArcher(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
+            case "Samurai\nCommander" ->
+                    new SamuraiCommander(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
             default -> null;
         };
         return e;

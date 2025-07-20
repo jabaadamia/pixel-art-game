@@ -45,4 +45,8 @@ public class EnemySpawner {
             }
         }
     }
+
+    public void setEnemyAvailableCharacters(List<CharacterCard> enemyAvailableCharacters) {
+        this.enemyAvailableCharacters = enemyAvailableCharacters;
+    }
 }

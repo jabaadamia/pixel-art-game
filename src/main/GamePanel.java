@@ -52,11 +52,9 @@ public class GamePanel extends JPanel {
         this.TOWER_WIDTH = width/4;
         this.TOWER_HEIGHT = TOWER_WIDTH;
         this.CHARACTER_START_X = TOWER_WIDTH +5;
-        this.CHARACTER_START_Y = height-100;
+        this.CHARACTER_START_Y = height-200;
 
-        this.playerTower = new Tower(0, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, 800, 1);
-        this.enemyTower = new Tower(width- TOWER_WIDTH -1, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, 800, 1);
-
+        createInitialTowers();
         setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
         setDoubleBuffered(true);
@@ -123,6 +121,8 @@ public class GamePanel extends JPanel {
                 playerEntities.remove(entity);
                 gameState.addToEnemyMoney((int) (entity.getPrice()*KILL_MONEY_PERCENT));
                 gameState.addToEnemyXP(entity.getPrice());
+                if (gameState.getEnemyXP() >= gameState.getCurrentLevelXP(false))
+                    levelUp(false);
             }
             entity.update(delta);
         }
@@ -171,6 +171,8 @@ public class GamePanel extends JPanel {
                 enemyEntities.remove(entity);
                 gameState.addToPlayerMoney((int) (entity.getPrice()*KILL_MONEY_PERCENT));
                 gameState.addToPlayerXP(entity.getPrice());
+                if (gameState.getPlayerXP() > gameState.getCurrentLevelXP(true))
+                    levelUp(true);
             }
             entity.update(delta);
         }
@@ -228,7 +230,7 @@ public class GamePanel extends JPanel {
         g2d.setColor(Color.WHITE);
         g2d.drawString("Money: " + gameState.getPlayerMoney(), cardStartX, cardStartY-10);
         g2d.drawString("soldiers: " + playerEntities.size()+"/10", cardStartX+100,cardStartY-10);
-        g2d.drawString("XP: " + gameState.getPlayerXP()+"/"+ LevelDefinitions.LVL1XP, cardStartX+200,cardStartY-10);
+        g2d.drawString("XP: " + gameState.getPlayerXP()+"/"+ gameState.getCurrentLevelXP(true), cardStartX+200,cardStartY-10);
         g2d.drawString("LVL: " + gameState.getPlayerLevel(), cardStartX+300,cardStartY-10);
 
         // tower health bars
@@ -273,6 +275,21 @@ public class GamePanel extends JPanel {
         gameState.setPlayerMoney(gameState.getPlayerMoney()-character.getPrice());
         Entity s = EntityFactory.createEntityOf(character, false, CHARACTER_START_X, CHARACTER_START_Y, this);
         playerEntities.add(s);
+    }
+
+    public void levelUp(boolean player){
+        if(player){
+            int playerLevel = gameState.getPlayerLevel()+1;
+            gameState.setPlayerLevel(playerLevel);
+            playerTower.levelUp();
+            playerAvailableCharacters = CharacterDefinitions.getLevel2Characters(); // fix
+        }else{
+            int enemyLevel = gameState.getEnemyLevel()+1;
+            gameState.setEnemyLevel(enemyLevel);
+            enemyTower.levelUp();
+            enemySpawner.setEnemyAvailableCharacters(CharacterDefinitions.getLevel2Characters()); // fix
+        }
+        createStaticLayer();
     }
 
     public int getCHARACTER_START_X() {
@@ -320,14 +337,19 @@ public class GamePanel extends JPanel {
         g2d.drawImage(gameState.getLvlBGImage(), 0, 0, PANEL_WIDTH, PANEL_HEIGHT, null);
 
         // draw towers
-        playerTower.draw(g2d, true);
-        enemyTower.draw(g2d, false);
+        playerTower.draw(g2d, false);
+        enemyTower.draw(g2d, true);
 
         g2d.dispose();
     }
 
     public void createInitialGameState(){
         gameState = new GameState(1, 1,1000, 1000);
+    }
+
+    public void createInitialTowers(){
+        this.playerTower = new Tower(0, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, LevelDefinitions.LVL1_TOWER_HP, 1);
+        this.enemyTower = new Tower(PANEL_WIDTH- TOWER_WIDTH -1, CHARACTER_START_Y - TOWER_HEIGHT +100, TOWER_WIDTH, TOWER_HEIGHT, LevelDefinitions.LVL1_TOWER_HP, 1);
     }
 
     // RESTART STUFF
@@ -361,9 +383,12 @@ public class GamePanel extends JPanel {
         showRestartButton = false;
         playerWon = false;
 
+        // reset available cards
+        playerAvailableCharacters = CharacterDefinitions.getLevel1Characters();
+        enemySpawner.setEnemyAvailableCharacters(playerAvailableCharacters);
+
         // reset towers
-        playerTower.setHealth(800);
-        enemyTower.setHealth(800);
+        createInitialTowers();
 
         // clear all entities and projectiles
         playerEntities.clear();

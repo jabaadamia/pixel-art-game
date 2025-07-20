@@ -1,6 +1,7 @@
 package main.towers;
 
 import main.characters.Targetable;
+import main.state.LevelDefinitions;
 import main.util.SpriteLoader;
 
 import java.awt.*;
@@ -24,7 +25,7 @@ public class Tower implements Targetable {
 
     public void draw(Graphics2D g2d, boolean rotate){
         String path = rotate ?
-                String.format("rot-tower_lvl%d.png", level) :
+                String.format("rot_tower_lvl%d.png", level) :
                 String.format("tower_lvl%d.png", level);
 
        towerIMG = SpriteLoader.load(path);
@@ -38,6 +39,19 @@ public class Tower implements Targetable {
         g2d.fillRect((int)(x+width*0.15), y-10, (int)(width*0.7* (double) health / maxHealth), 2);
         g2d.setColor(Color.red);
         g2d.fillRect((int)(x+width*0.15+width*0.7* (double) health / maxHealth), y-10, (int)(width*0.7* (1 - (double) health /maxHealth)), 2);
+    }
+
+    public void levelUp(){
+        if(level>1) return;
+        level++;
+        int newMaxHealth;
+
+        switch (level){
+            case 2 -> newMaxHealth=LevelDefinitions.LVL2_TOWER_HP;
+            default -> newMaxHealth=800;
+        }
+        health = newMaxHealth-(maxHealth-health);
+        maxHealth = newMaxHealth;
     }
 
     public int getHealth() {
