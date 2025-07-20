@@ -25,8 +25,8 @@ public class Tower implements Targetable {
 
     public void draw(Graphics2D g2d, boolean rotate){
         String path = rotate ?
-                String.format("rot_tower_lvl%d.png", level) :
-                String.format("tower_lvl%d.png", level);
+                String.format("towers/rot_tower_lvl%d.png", level) :
+                String.format("towers/tower_lvl%d.png", level);
 
        towerIMG = SpriteLoader.load(path);
        g2d.drawImage(towerIMG, x, y, width, height, null);

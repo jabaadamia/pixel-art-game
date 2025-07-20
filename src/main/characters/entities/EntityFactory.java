@@ -18,9 +18,9 @@ public class EntityFactory {
                     new Archer(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
             case "Samurai" ->
                     new Samurai(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
-            case "Samurai\nArcher" ->
+            case "Bow Samurai" ->
                     new SamuraiArcher(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
-            case "Samurai\nCommander" ->
+            case "Shogun" ->
                     new SamuraiCommander(isEnemy, x, y, card.getWidth(), card.getHeight(), card.getHealth(), card.getPrice(), card.getRange(), card.getDamage(), card.getRecoilTime(), panel);
             default -> null;
         };

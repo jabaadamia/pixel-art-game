@@ -26,11 +26,11 @@ public class ArcherResources {
         int frameHeight = 40;
         int frameSpacing = 100;
 
-        BufferedImage walkIMGEnemy = SpriteLoader.load("characters/rot_soldierWalk.png");
-        BufferedImage attackIMGEnemy = SpriteLoader.load("characters/rot_archerAttack.png");
+        BufferedImage walkIMGEnemy = SpriteLoader.load("characters/knights/rot_soldierWalk.png");
+        BufferedImage attackIMGEnemy = SpriteLoader.load("characters/knights/rot_archerAttack.png");
 
-        BufferedImage walkIMGPlayer = SpriteLoader.load("characters/soldierWalk.png");
-        BufferedImage attackIMGPlayer = SpriteLoader.load("characters/archerAttack.png");
+        BufferedImage walkIMGPlayer = SpriteLoader.load("characters/knights/soldierWalk.png");
+        BufferedImage attackIMGPlayer = SpriteLoader.load("characters/knights/archerAttack.png");
 
         for (int i = 0; i < 8; i++) {
             walkFramesEnemy[7 - i] = walkIMGEnemy.getSubimage(frameSpacing * i + 20, 20, frameWidth, frameHeight);

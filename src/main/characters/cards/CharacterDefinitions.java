@@ -11,7 +11,7 @@ public class CharacterDefinitions {
     public static BufferedImage soldierIMG;
 
     static {
-       soldierIMG = SpriteLoader.subImage("characters/rot_soldierWalk.png",35,35,28,28);
+       soldierIMG = SpriteLoader.subImage("characters/knights/rot_soldierWalk.png",35,35,28,28);
     }
 
     public static final CharacterCard SOLDIER = new CharacterCard(
@@ -62,7 +62,7 @@ public class CharacterDefinitions {
     );
 
     public static final CharacterCard SAMURAI_ARCHER = new CharacterCard(
-            "Samurai\nArcher",
+            "Bow Samurai",
             2,
             350,
             230,
@@ -73,7 +73,7 @@ public class CharacterDefinitions {
     );
 
     public static final CharacterCard SAMURAI_COMMANDER = new CharacterCard(
-            "Samurai\nCommander",
+            "Shogun",
             2,
             1000,
             600,

@@ -54,7 +54,7 @@ public class GameState {
     }
 
     public BufferedImage getLvlBGImage() {
-        String path = String.format("background_lvl%d.png", Math.max(playerLevel,enemyLevel));
+        String path = String.format("backgrounds/background_lvl%d.png", Math.max(playerLevel,enemyLevel));
         return SpriteLoader.load(path);
     }
 
