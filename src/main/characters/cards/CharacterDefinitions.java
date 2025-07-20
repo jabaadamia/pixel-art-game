@@ -9,9 +9,11 @@ import java.util.List;
 public class CharacterDefinitions {
     // Level 1
     public static BufferedImage soldierIMG;
+    public static BufferedImage knightIMG;
 
     static {
        soldierIMG = SpriteLoader.subImage("characters/knights/rot_soldierWalk.png",35,35,28,28);
+       knightIMG = SpriteLoader.subImage("characters/knights/knightWalk.png",0,65,65,60);
     }
 
     public static final CharacterCard SOLDIER = new CharacterCard(
@@ -34,9 +36,19 @@ public class CharacterDefinitions {
             500,
             soldierIMG
     );
+    public static final CharacterCard KNIGHT = new CharacterCard(
+            "Knight",
+            1,
+            250,
+            120,
+            18,
+            10,
+            500,
+            knightIMG
+    );
 
     public static List<CharacterCard> getLevel1Characters() {
-        return List.of(SOLDIER, ARCHER);
+        return List.of(SOLDIER, ARCHER, KNIGHT);
     }
 
     // Level 2?? Samurai

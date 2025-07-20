@@ -223,15 +223,15 @@ public class GamePanel extends JPanel {
     public void drawUI(Graphics2D g2d) {
         int cardStartX = 30;
         int cardStartY = 30;
-        int padding = 2;
+        int padding = 10;
         int btnPerRow = 6;
 
         // meta data
         g2d.setColor(Color.WHITE);
         g2d.drawString("Money: " + gameState.getPlayerMoney(), cardStartX, cardStartY-10);
         g2d.drawString("soldiers: " + playerEntities.size()+"/10", cardStartX+100,cardStartY-10);
-        g2d.drawString("XP: " + gameState.getPlayerXP()+"/"+ gameState.getCurrentLevelXP(true), cardStartX+200,cardStartY-10);
-        g2d.drawString("LVL: " + gameState.getPlayerLevel(), cardStartX+300,cardStartY-10);
+        g2d.drawString("XP: " + gameState.getPlayerXP()+"/"+ gameState.getCurrentLevelXP(true), cardStartX+210,cardStartY-10);
+        g2d.drawString("LVL: " + gameState.getPlayerLevel(), cardStartX+320,cardStartY-10);
 
         // tower health bars
         playerTower.drawHealthBar(g2d);
@@ -252,7 +252,7 @@ public class GamePanel extends JPanel {
     public void checkCharacterClick(int mx, int my) {
         int startX = 30;
         int startY = 30;
-        int padding = 2;
+        int padding = 10;
         int btnPerRow = 6;
         int btnWidth = 56;
         int btnHeight = 56;
