@@ -29,6 +29,8 @@ public abstract class Entity implements Targetable {
     protected BufferedImage[] walkFrames;
     protected BufferedImage[] attackFrames;
 
+    protected String attackSoundFilePath;
+
     public Entity(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime) {
         this.isEnemy = isEnemy;
         this.x = x;

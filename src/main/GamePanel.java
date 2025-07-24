@@ -9,6 +9,7 @@ import main.projectiles.Arrow;
 import main.state.GameState;
 import main.state.LevelDefinitions;
 import main.towers.Tower;
+import main.util.AudioPlayer;
 import main.util.InputHandler;
 
 import javax.swing.*;
@@ -41,6 +42,7 @@ public class GamePanel extends JPanel {
 
     private InputHandler inputHandler;
     private BufferedImage staticLayer;
+    public AudioPlayer audio = new AudioPlayer();
 
     private boolean playerWon = false;
     private boolean gameOver = false;
@@ -69,6 +71,7 @@ public class GamePanel extends JPanel {
         setFocusable(true);
 
         createStaticLayer();
+        audio.playBackgroundMusic();
     }
 
     public void update(double delta) {

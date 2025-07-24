@@ -77,9 +77,9 @@ public class CharacterDefinitions {
             "Bow Samurai",
             2,
             350,
-            230,
-            40,
-            120,
+            200,
+            30,
+            180,
             500,
             archerSamuraiIMG
     );
@@ -87,10 +87,10 @@ public class CharacterDefinitions {
     public static final CharacterCard SAMURAI_COMMANDER = new CharacterCard(
             "Shogun",
             2,
-            1000,
-            600,
-            50,
+            800,
+            400,
             10,
+            15,
             500,
             commanderSamuraiIMG
     );

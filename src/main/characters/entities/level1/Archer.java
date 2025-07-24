@@ -14,7 +14,7 @@ public class Archer extends Entity {
         super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
         this.arrowIMG = ArcherResources.arrowIMG;
-
+        attackSoundFilePath = ArcherResources.attackSoundFilePath;
         if (isEnemy) {
             walkFrames = ArcherResources.walkFramesEnemy;
             attackFrames = ArcherResources.attackFramesEnemy;
@@ -68,6 +68,7 @@ public class Archer extends Entity {
                         else
                             fireArrow(this, panel.getEnemyEntities().getFirst(), arrowIMG);
                     }
+                    panel.audio.playSoundEffect(attackSoundFilePath);
 
                 }
                 sprite = attackFrames[currentAttackFrame];

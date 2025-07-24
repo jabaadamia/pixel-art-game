@@ -9,7 +9,7 @@ public class Knight extends Entity {
     public Knight(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime, GamePanel panel) {
         super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
-
+        attackSoundFilePath = KnightResources.attackSoundFilePath;
         if (isEnemy) {
             walkFrames = KnightResources.walkFramesEnemy;
             attackFrames = KnightResources.attackFramesEnemy;
@@ -49,7 +49,7 @@ public class Knight extends Entity {
 
                 if (currentAttackFrame >= attackFrames.length) {
                     currentAttackFrame = 0;
-
+                    panel.audio.playSoundEffect(attackSoundFilePath);
                     if(attacksTower){
                         if (isEnemy)
                             panel.getPlayerTower().setHealth(panel.getPlayerTower().getHealth()-damage);

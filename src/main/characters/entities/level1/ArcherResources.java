@@ -13,6 +13,8 @@ public class ArcherResources {
     public static final BufferedImage[] walkFramesPlayer;
     public static final BufferedImage[] attackFramesPlayer;
 
+    public static final String attackSoundFilePath = "/sounds/metal-arrow-hit.wav";
+
     static {
         arrowIMG = SpriteLoader.load("arrow.png");
 

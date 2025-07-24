@@ -9,7 +9,7 @@ public class Soldier extends Entity {
     public Soldier(boolean isEnemy, float x, float y, int width, int height, int health, int price, int range, int damage, long recoilTime, GamePanel panel) {
         super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
-
+        attackSoundFilePath = SoldierResources.attackSoundFilePath;
         if (isEnemy) {
             walkFrames = SoldierResources.walkFramesEnemy;
             attackFrames = SoldierResources.attackFramesEnemy;
@@ -49,7 +49,7 @@ public class Soldier extends Entity {
 
                 if (currentAttackFrame >= attackFrames.length) {
                     currentAttackFrame = 0;
-
+                    panel.audio.playSoundEffect(attackSoundFilePath);
                     if(attacksTower){
                         if (isEnemy)
                             panel.getPlayerTower().setHealth(panel.getPlayerTower().getHealth()-damage);

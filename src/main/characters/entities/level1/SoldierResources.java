@@ -11,6 +11,8 @@ public class SoldierResources {
     public static final BufferedImage[] walkFramesPlayer;
     public static final BufferedImage[] attackFramesPlayer;
 
+    public static final String attackSoundFilePath = "/sounds/sword-strikes-armor.wav";
+
     static {
 
         walkFramesEnemy = new BufferedImage[8];

@@ -11,6 +11,8 @@ public class KnightResources {
     public static final BufferedImage[] walkFramesPlayer;
     public static final BufferedImage[] attackFramesPlayer;
 
+    public static final String attackSoundFilePath = "/sounds/sword-blade-attack.wav";
+
     static {
         walkFramesEnemy = new BufferedImage[8];
         attackFramesEnemy = new BufferedImage[5];

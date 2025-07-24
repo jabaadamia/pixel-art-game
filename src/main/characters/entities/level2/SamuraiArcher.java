@@ -14,7 +14,7 @@ public class SamuraiArcher extends Entity {
         super(isEnemy, x, y, width, height, health, price, range, damage, recoilTime);
         this.panel = panel;
         this.arrowIMG = SamuraiArcherResources.arrowIMG;
-
+        attackSoundFilePath = SamuraiArcherResources.attackSoundFilePath;
         if (isEnemy) {
             walkFrames = SamuraiArcherResources.walkFramesEnemy;
             attackFrames = SamuraiArcherResources.attackFramesEnemy;
@@ -68,7 +68,7 @@ public class SamuraiArcher extends Entity {
                         else
                             fireArrow(this, panel.getEnemyEntities().getFirst(), arrowIMG);
                     }
-
+                    panel.audio.playSoundEffect(attackSoundFilePath);
                 }
                 sprite = attackFrames[currentAttackFrame];
             }
